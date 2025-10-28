@@ -1,4 +1,4 @@
-/* Variáveis CSS para facilitar a manutenção das cores e fontes */
+/* Variáveis CSS */
 :root {
   --cor-primaria-start: #4a1d9c;
   --cor-primaria-end: #ed20a0;
@@ -10,8 +10,10 @@
   --fonte-principal: "Poppins", sans-serif;
 }
 
-
-/* Reset básico e estilos gerais */
+/* Reset básico, estilos gerais e BOX-SIZING GLOBAL */
+*, *::before, *::after {
+  box-sizing: border-box; 
+}
 body {
   font-family: var(--fonte-principal);
   margin: 0;
@@ -21,59 +23,49 @@ body {
   line-height: 1.6;
 }
 
-
 .container {
   max-width: 960px;
   margin: 0 auto;
   padding: 0 15px;
 }
 
-
-/* --- CORREÇÃO DO HEADER (ALTURA MÍNIMA) --- */
+/* Header Corrigido */
 .header {
   background-color: var(--cor-fundo);
-  padding: 10px; /* Remove padding da tag principal */
+  padding: 10px 0; 
   border-bottom: 1px solid var(--cor-cinza-claro);
-  line-height: 0; /* Zera altura da linha */
+  line-height: normal; 
 }
-
-
 .header .container {
     display: flex;
-    align-items: center;
-    padding: 2px 15px; /* Padding vertical mínimo (4px total) */
+    align-items: center; 
+    padding: 0 15px; 
 }
-
-
 .header .logo {
-    margin: 5;
-    padding: 5;
+    margin: 0;
+    padding: 0;
 }
-
-
 .header .logo img {
-  height: 50px; /* Altura da logo */
-  display: block;
-  margin: 0;
-  /* vertical-align: middle; <-- removido para evitar o aviso */
+  height: 50px; 
+  display: block; 
+  margin: 0; 
 }
-/* --- FIM CORREÇÃO HEADER --- */
-
 
 /* Main Content */
 .main-content {
   text-align: center;
-  padding: 20px 0; /* Espaçamento vertical reduzido */
+  padding: 20px 0; 
 }
 
-
+/* CORREÇÃO LARGURA: Removido max-width */
 .cotacao-section {
   background-color: var(--cor-fundo);
-  padding: 25px;
+  padding: 25px; 
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  /* margin-left: auto; */ /* REMOVIDO */
+  /* margin-right: auto; */ /* REMOVIDO */
 }
-
 
 .titulo-cotacao {
   font-size: 2.5em;
@@ -82,14 +74,12 @@ body {
   font-weight: 600;
 }
 
-
 .subtitulo-animado {
   font-size: 1.2em;
   color: var(--cor-texto-escuro);
   min-height: 30px;
   margin-bottom: 30px;
 }
-
 
 /* Formulário de Cálculo */
 .form-calculo {
@@ -99,22 +89,16 @@ body {
   gap: 15px;
   margin-bottom: 40px;
 }
-
-
 .input-group {
   width: 100%;
   max-width: 300px;
   text-align: left;
 }
-
-
 .input-group label {
   display: block;
   margin-bottom: 4px;
   font-weight: 600;
 }
-
-
 .input-group input[type="number"],
 .input-group select {
   width: 100%;
@@ -122,9 +106,7 @@ body {
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1em;
-  box-sizing: border-box;
 }
-
 
 /* Botões */
 .btn-principal,
@@ -139,26 +121,16 @@ body {
   text-decoration: none;
   display: inline-block;
 }
-
-
 .btn-principal {
-  background: linear-gradient(
-    to bottom right,
-    var(--cor-primaria-start),
-    var(--cor-primaria-end)
-  );
+  background: linear-gradient( to bottom right, var(--cor-primaria-start), var(--cor-primaria-end) );
   color: var(--cor-texto-claro);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
-
-
 .btn-principal:hover {
   opacity: 0.9;
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
 }
-
-
 .btn-secundario {
   margin-left: auto;
   margin-right: auto;
@@ -167,13 +139,10 @@ body {
   color: var(--cor-texto-claro);
   margin-top: 15px;
 }
-
-
 .btn-secundario:hover {
   background-color: #8a2be2;
   transform: translateY(-1px);
 }
-
 
 /* --- RESULTADO DO CÁLCULO (Contêiner Principal) --- */
 .resultado {
@@ -184,36 +153,27 @@ body {
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
   text-align: center;
 }
-
-
 .resultado h2 {
   color: var(--cor-solida-principal);
   margin-bottom: 20px;
 }
 
-
-/* ------------------------------------------------------------- */
-/* CONTÊINER PRINCIPAL PARA AS DUAS COLUNAS (FLEXBOX) - SÓ AFETA O RESULTADO */
-/* ------------------------------------------------------------- */
+/* CONTÊINER PRINCIPAL PARA AS DUAS COLUNAS */
 .resultado-colunas {
     display: flex;
     gap: 20px;
-    align-items: flex-start;
+    align-items: flex-start; /* Mantém alinhado ao topo */
     margin-bottom: 10px;
     text-align: left;
 }
-
-
-/* COLUNA ESQUERDA: EMPILHAMENTO DE RESULTADOS */
+/* COLUNA ESQUERDA */
 .coluna-resultados {
     flex: 2;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-
-
-/* COLUNA DIREITA: Propaganda/Bônus */
+/* COLUNA DIREITA (Propaganda) */
 .coluna-propaganda {
     flex: 1;
     background: linear-gradient(to top left, var(--cor-primaria-start), var(--cor-primaria-end));
@@ -222,29 +182,14 @@ body {
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    height: fit-content;
+    height: fit-content; /* Garante altura pelo conteúdo */
+    align-self: flex-start; /* Reforça alinhamento ao topo */
 }
-.coluna-propaganda h3 {
-    margin-top: 0;
-    font-size: 1.1em;
-    font-weight: 700;
-}
-.coluna-propaganda span {
-    font-weight: 800;
-    font-size: 1.3em;
-    color: #ffd700;
-}
-.coluna-propaganda p {
-    margin: 8px 0;
-    font-size: 0.95em;
-}
+.coluna-propaganda h3 { margin-top: 0; font-size: 1.1em; font-weight: 700; }
+.coluna-propaganda span { font-weight: 800; font-size: 1.3em; color: #ffd700; }
+.coluna-propaganda p { margin: 8px 0; font-size: 0.95em; }
 
-
-
-
-/* ------------------------------------------------------------- */
-/* ESTILOS DOS QUADROS INTERNOS (Mensal e Total) */
-/* ------------------------------------------------------------- */
+/* QUADROS INTERNOS (Mensal e Total) */
 .quadro-item {
     background-color: var(--cor-fundo);
     padding: 15px;
@@ -252,58 +197,17 @@ body {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
 }
+.quadro-item h3 { font-size: 0.9em; color: var(--cor-texto-escuro); margin-top: 0; margin-bottom: 5px; font-weight: 600; text-transform: uppercase; }
+.valor-economia { font-size: 2.2em; font-weight: 700; color: var(--cor-primaria-start); margin: 0; }
+.valor-economia-total { font-size: 2.2em; font-weight: 700; color: var(--cor-primaria-end); margin: 0; }
 
-
-.quadro-item h3 {
-    font-size: 0.9em;
-    color: var(--cor-texto-escuro);
-    margin-top: 0;
-    margin-bottom: 5px;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-
-/* VALOR MENSAL */
-.valor-economia {
-    font-size: 2.2em;
-    font-weight: 700;
-    color: var(--cor-primaria-start);
-    margin: 0;
-}
-
-
-/* VALOR TOTAL NO CONTRATO */
-.valor-economia-total {
-    font-size: 2.2em;
-    font-weight: 700;
-    color: var(--cor-primaria-end);
-    margin: 0;
-}
-
-
-
-
-/* ------------------------------------------------------------- */
 /* MEDIA QUERIES (Responsividade) */
-/* ------------------------------------------------------------- */
 @media (max-width: 768px) {
-    .resultado-colunas {
-        flex-direction: column;
-    }
-   
-    .coluna-resultados, .coluna-propaganda {
-        flex: none;
-        width: 100%;
-        margin-bottom: 20px;
-    }
-
-
-    .titulo-cotacao {
-      font-size: 1.8em;
-    }
-    .valor-economia, .valor-economia-total {
-      font-size: 1.8em;
-    }
+    .resultado-colunas { flex-direction: column; }
+    .coluna-resultados, .coluna-propaganda { flex: none; width: 100%; margin-bottom: 20px; }
+    .quadro-item { width: 100%; margin-bottom: 10px; }    
+    .titulo-cotacao { font-size: 1.8em; }
+    .valor-economia, .valor-economia-total { font-size: 1.8em; }
+    /* REMOVIDO: .cotacao-section { max-width: 95%; padding: 20px; } */ /* Não limitar mais a seção */
+    .input-group { max-width: 100%; } 
 }
-
