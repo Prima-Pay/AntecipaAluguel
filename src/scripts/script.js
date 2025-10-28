@@ -239,6 +239,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 5. Redirecionamento para contato
     btnContato.addEventListener("click", () => {
-        window.location.href = "https://primapay.com.br/contato";
+        window.location.href = "https://wa.me/message/4BXMIP4XJNK4M1";
     });
 });
