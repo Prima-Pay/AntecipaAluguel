@@ -54,7 +54,7 @@ body {
 /* Main Content */
 .main-content {
   text-align: center;
-  padding: 20px 0; 
+  padding: 20px 15px; 
 }
 
 /* CORREÇÃO LARGURA: Removido max-width */
