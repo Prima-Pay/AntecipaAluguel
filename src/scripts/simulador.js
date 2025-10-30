@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- REGRAS DE NEGÓCIO ---
-  const TAXA_MENSAL_LOCATARIO = 0.05; 
+  const TAXA_MENSAL_LOCATARIO = 0.05; // 5% ao mês
   const MAX_MESES_LOCATARIO = 5; 
-  const TAXA_TOTAL_LOCATARIO = TAXA_MENSAL_LOCATARIO * MAX_MESES_LOCATARIO;
+  // A Taxa total MÁXIMA é 25% (usada para o limite)
+  const TAXA_TOTAL_LOCATARIO = TAXA_MENSAL_LOCATARIO * MAX_MESES_LOCATARIO; 
 
-  const TAXA_MENSAL_IMOBILIARIA = 0.05;
+  const TAXA_MENSAL_IMOBILIARIA = 0.05; // 5% ao mês (Taxa BASE da Prima)
   const MAX_MESES_IMOBILIARIA = 5; 
   const TAXA_TOTAL_IMOBILIARIA = TAXA_MENSAL_IMOBILIARIA * MAX_MESES_IMOBILIARIA;
 
@@ -37,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   tipoUsuarioSelect.addEventListener("change", () => {
     const tipo = tipoUsuarioSelect.value;
     
-    // Reseta tudo ao trocar
+    // Reseta tudo
     avisoLimite.style.display = "none";
     btnSimular.disabled = false;
     resultadoCalculoDiv.style.display = "none";
@@ -51,32 +52,28 @@ document.addEventListener("DOMContentLoaded", () => {
     tipoUsuarioSelect.value = tipo; 
 
     if (tipo === "locatario") {
-      // Configuração dos campos para locatário.
       labelValorBase.textContent = "Valor mensal do seu aluguel (R$):";
       labelValorDesejado.textContent = "Valor LÍQUIDO que deseja receber (R$):";
       valorBaseMensalInput.placeholder = "Ex: 1000.00";
       valorDesejadoInput.placeholder = "Ex: 950.00";
       
-      //infoTaxa.textContent = `Custo total do serviço: ${TAXA_TOTAL_LOCATARIO * 100}%`;
-      //infoTaxa.style.display = "block";
+      // --- MUDANÇA 1: Texto de ajuda reflete a taxa variável ---
+      infoTaxa.textContent = `Taxa de juros de 5% a 25%, dependendo do valor solicitado.`;
+      infoTaxa.style.display = "block";
       
       camposDinamicosWrapper.style.display = "flex";
 
     } else if (tipo === "imobiliaria") {
       validacaoImobiliariaDiv.style.display = "flex"; 
       codigoParceiroInput.focus(); 
-    } else {
-      infoTaxa.style.display = "none"; 
-      camposDinamicosWrapper.style.display = "none";
-      validacaoImobiliariaDiv.style.display = "none";
-    }
+    } 
+    // (Ocultar o restante é tratado no reset)
   });
 
   btnValidarCodigo.addEventListener("click", () => {
     const codigoDigitado = codigoParceiroInput.value;
 
     if (codigoDigitado === CODIGO_PARCEIRO_IMOBILIARIA) {
-        // --- SUCESSO ---
         avisoCodigoInvalido.style.display = "none";
         validacaoImobiliariaDiv.style.display = "none"; 
 
@@ -86,14 +83,14 @@ document.addEventListener("DOMContentLoaded", () => {
         valorDesejadoInput.placeholder = "Ex: 950.00";
         grupoMarkup.style.display = "block";
         
-        infoTaxa.textContent = `Taxa base: ${(TAXA_MENSAL_IMOBILIARIA * 100).toFixed(0)}% a.m. (será somada ao markup).`;
+        // --- MUDANÇA 2: Texto de ajuda reflete a taxa variável ---
+        infoTaxa.textContent = `Taxa base de 5% a.m. (Custo total de 5% a 25% + Markup, dependendo do valor).`;
         infoTaxa.style.display = "block";
         
         camposDinamicosWrapper.style.display = "flex"; 
         validarLimiteInputs(); 
 
     } else {
-        // --- FALHA ---
         avisoCodigoInvalido.style.display = "block";
         codigoParceiroInput.value = ""; 
         codigoParceiroInput.focus();
@@ -103,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * 3. Validação de limite (Calcula o limite líquido MÁXIMO)
-   * (Usando taxa total fixa, de 25%)
+   * (Esta função ESTÁ CORRETA, pois ela calcula o Teto Máximo, ou seja, a Faixa 5)
    */
   function validarLimiteInputs() {
     const tipo = tipoUsuarioSelect.value; 
@@ -125,12 +122,13 @@ document.addEventListener("DOMContentLoaded", () => {
       taxaMensalBase = TAXA_MENSAL_IMOBILIARIA + markupPerc; 
       
       limiteBruto = base * MAX_MESES_IMOBILIARIA;
-      taxaTotalMaxima = taxaMensalBase * MAX_MESES_IMOBILIARIA; 
+      taxaTotalMaxima = taxaMensalBase * MAX_MESES_IMOBILIARIA; // 25% + Markup Total
     } else {
       avisoLimite.style.display = "none";
       return;
     }
 
+    // Calcula o limite líquido MÁXIMO (Teto da Faixa 5)
     limiteLiquido = limiteBruto * (1 - taxaTotalMaxima);
     // (Ex: 5000 * (1 - 0.25) = 3750. CORRETO)
 
@@ -142,6 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
        avisoLimite.style.display = "none";
     }
 
+    // Valida se o valor digitado excede o Teto Máximo
     if (desejadoLiquido > limiteLiquido && limiteLiquido > 0) {
       avisoLimite.textContent = `O valor inserido excede o limite líquido de R$ ${limiteLiquido.toLocaleString("pt-BR", {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
       avisoLimite.style.color = "#c0392b"; 
@@ -159,6 +158,9 @@ document.addEventListener("DOMContentLoaded", () => {
   valorDesejadoInput.addEventListener("input", validarLimiteInputs);
   markupInput.addEventListener("input", validarLimiteInputs); 
 
+  /**
+   * 4. Manipulador de envio do formulário (CÁLCULO CORRIGIDO - LÓGICA DE FAIXAS)
+   */
   simuladorForm.addEventListener("submit", (event) => {
     event.preventDefault(); 
 
@@ -166,10 +168,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const valorBase = parseFloat(valorBaseMensalInput.value);
     const valorLiquidoSolicitado = parseFloat(valorDesejadoInput.value);
 
-    let taxaMensal = 0;
-    let limiteBruto = 0;
+    let taxaMensalBase = 0;
     let maxMeses = 0;
-    let taxaTotal = 0; // Taxa total (fixa) da operação
 
     if (isNaN(valorBase) || valorBase <= 0 || isNaN(valorLiquidoSolicitado) || valorLiquidoSolicitado <= 0) {
       alert("Por favor, preencha todos os valores corretamente.");
@@ -177,37 +177,75 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     if (tipo === "locatario") {
-      taxaMensal = TAXA_MENSAL_LOCATARIO;
+      taxaMensalBase = TAXA_MENSAL_LOCATARIO;
       maxMeses = MAX_MESES_LOCATARIO;
-      taxaTotal = taxaMensal * maxMeses; // 0.05 * 5 = 0.25 (25%)
-
     } else if (tipo === "imobiliaria") {
       const markupPerc = parseFloat(markupInput.value) / 100 || 0; 
-      taxaMensal = TAXA_MENSAL_IMOBILIARIA + markupPerc; 
+      taxaMensalBase = TAXA_MENSAL_IMOBILIARIA + markupPerc; 
       maxMeses = MAX_MESES_IMOBILIARIA;
-      taxaTotal = taxaMensal * maxMeses; // (0.05 + markup) * 5
     }
 
-    let valorBrutoTotal = valorLiquidoSolicitado / (1 - taxaTotal);
+    // --- MUDANÇA 3: A NOVA LÓGICA DE FAIXAS ---
+
+    let taxaTotalAplicada = 0;
+    
+    // Calcula as taxas TOTAIS para cada faixa
+    const taxaFaixa1 = taxaMensalBase * 1; // 5%
+    const taxaFaixa2 = taxaMensalBase * 2; // 10%
+    const taxaFaixa3 = taxaMensalBase * 3; // 15%
+    const taxaFaixa4 = taxaMensalBase * 4; // 20%
+    const taxaFaixa5 = taxaMensalBase * 5; // 25%
+
+    // Calcula os tetos LÍQUIDOS para cada faixa (baseado na tabela que discutimos)
+    const tetoLiquidoFaixa1 = (valorBase * 1) * (1 - taxaFaixa1); // Ex: 1000 * 0.95 = 950
+    const tetoLiquidoFaixa2 = (valorBase * 2) * (1 - taxaFaixa2); // Ex: 2000 * 0.90 = 1800
+    const tetoLiquidoFaixa3 = (valorBase * 3) * (1 - taxaFaixa3); // Ex: 3000 * 0.85 = 2550
+    const tetoLiquidoFaixa4 = (valorBase * 4) * (1 - taxaFaixa4); // Ex: 4000 * 0.80 = 3200
+    const tetoLiquidoFaixa5 = (valorBase * 5) * (1 - taxaFaixa5); // Ex: 5000 * 0.75 = 3750
+
+    // Encontra a faixa correta
+    if (valorLiquidoSolicitado <= tetoLiquidoFaixa1) {
+      taxaTotalAplicada = taxaFaixa1; // 5%
+    } else if (valorLiquidoSolicitado <= tetoLiquidoFaixa2) {
+      taxaTotalAplicada = taxaFaixa2; // 10%
+    } else if (valorLiquidoSolicitado <= tetoLiquidoFaixa3) {
+      taxaTotalAplicada = taxaFaixa3; // 15%
+    } else if (valorLiquidoSolicitado <= tetoLiquidoFaixa4) {
+      taxaTotalAplicada = taxaFaixa4; // 20%
+    } else {
+      // Se for maior que a faixa 4, ou igual ao teto da 5, aplica a taxa máxima
+      taxaTotalAplicada = taxaFaixa5; // 25%
+    }
+
+    // --- FIM DA LÓGICA DE FAIXAS ---
+
+    // Agora, faz o cálculo final usando a taxa correta que encontramos
+    let valorBrutoTotal = valorLiquidoSolicitado / (1 - taxaTotalAplicada);
     let custoTotal = valorBrutoTotal - valorLiquidoSolicitado;
     
-    // (Ex: 3750 / (1 - 0.25) = 3750 / 0.75 = 5000. CORRETO)
-    // (Custo: 5000 - 3750 = 1250. CORRETO)
-    
-    limiteBruto = valorBase * maxMeses;
+    // Failsafe (não deve mais acontecer, mas mantemos por segurança)
+    let limiteBruto = valorBase * maxMeses;
     if (valorBrutoTotal > (limiteBruto + 0.01)) {
          alert("O valor solicitado, somado às taxas, excede o limite total. Por favor, solicite um valor líquido menor.");
          return;
     }
 
-    exibirResultado(valorLiquidoSolicitado, custoTotal, valorBrutoTotal, taxaTotal, taxaMensal);
+    exibirResultado(valorLiquidoSolicitado, custoTotal, valorBrutoTotal, taxaTotalAplicada, taxaMensalBase);
   });
 
+  /**
+   * 5. Função auxiliar para formatar e exibir os resultados
+   */
   function exibirResultado(liquido, custo, bruto, taxaTotal, taxaMensal) { 
     const formatoMoeda = { style: "currency", currency: "BRL" };
 
-    const taxaTotalFormatada = (taxaTotal * 100).toFixed(0); // 25%
-    const taxaMensalFormatada = (taxaMensal * 100).toFixed(1); // 5.0% (ou 5.0 + markup)
+    // --- MUDANÇA 4: O texto do resultado agora é mais inteligente ---
+    const taxaTotalFormatada = (taxaTotal * 100).toFixed(0);
+    const taxaMensalFormatada = (taxaMensal * 100).toFixed(1);
+    
+    // Descobre o "mês equivalente" para exibir
+    // (Se a taxa total foi 15% e a mensal é 5%, meses = 3)
+    const mesesEquivalentes = (taxaTotal / taxaMensal).toFixed(0);
 
     resultadoCalculoDiv.innerHTML = `
         <h2>Resultado da Simulação:</h2>
@@ -222,14 +260,16 @@ document.addEventListener("DOMContentLoaded", () => {
               <h3>Custos da Operação (Juros/Taxas)</h3>
               <p class="valor-economia-total">R$ <span id="resultadoCustoTotal">${custo.toLocaleString("pt-BR", formatoMoeda)}</span></p>
               
-              <small id="resultadoInfoTaxa" style="font-weight: 600;">(Custo total: ${taxaTotalFormatada}% sobre o valor bruto)</small>
+              <small id="resultadoInfoTaxa" style="font-weight: 600;">
+                (Custo total: ${taxaTotalFormatada}% sobre o valor bruto.)
+              </small>
             </div>
 
             <div class="quadro-item">
               <h3>Valor Total Comprometido (Bruto)</h3>
               <p class="valor-economia" style="color: var(--cor-solida-principal);">
                 R$ <span id="resultadoValorBruto">${bruto.toLocaleString("pt-BR", formatoMoeda)}</span>
-              </Custo>
+              </p>
             </div>
           </div>
         </div>
