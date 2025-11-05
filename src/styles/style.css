@@ -10,7 +10,6 @@
   --fonte-principal: "Poppins", sans-serif;
 }
 
-/* Reset básico, estilos gerais e BOX-SIZING GLOBAL */
 *, *::before, *::after {
   box-sizing: border-box; 
 }
@@ -29,7 +28,6 @@ body {
   padding: 0 15px;
 }
 
-/* Header Corrigido */
 .header {
   background-color: var(--cor-fundo);
   padding: 10px 0; 
@@ -51,20 +49,16 @@ body {
   margin: 0; 
 }
 
-/* Main Content */
 .main-content {
   text-align: center;
   padding: 20px 15px; 
 }
 
-/* CORREÇÃO LARGURA: Removido max-width */
 .cotacao-section {
   background-color: var(--cor-fundo);
   padding: 25px; 
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  /* margin-left: auto; */ /* REMOVIDO */
-  /* margin-right: auto; */ /* REMOVIDO */
 }
 
 .titulo-cotacao {
@@ -81,7 +75,6 @@ body {
   margin-bottom: 30px;
 }
 
-/* Formulário de Cálculo */
 .form-calculo {
   display: flex;
   flex-direction: column;
@@ -108,7 +101,6 @@ body {
   font-size: 1em;
 }
 
-/* Botões */
 .btn-principal,
 .btn-secundario {
   padding: 12px 24px;
@@ -144,7 +136,6 @@ body {
   transform: translateY(-1px);
 }
 
-/* --- RESULTADO DO CÁLCULO (Contêiner Principal) --- */
 .resultado {
   margin-top: 20px;
   background-color: var(--cor-cinza-claro);
@@ -158,22 +149,21 @@ body {
   margin-bottom: 20px;
 }
 
-/* CONTÊINER PRINCIPAL PARA AS DUAS COLUNAS */
 .resultado-colunas {
     display: flex;
     gap: 20px;
-    align-items: flex-start; /* Mantém alinhado ao topo */
+    align-items: flex-start; 
     margin-bottom: 10px;
     text-align: left;
 }
-/* COLUNA ESQUERDA */
+
 .coluna-resultados {
     flex: 2;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-/* COLUNA DIREITA (Propaganda) */
+
 .coluna-propaganda {
     flex: 1;
     background: linear-gradient(to top left, var(--cor-primaria-start), var(--cor-primaria-end));
@@ -182,14 +172,13 @@ body {
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    height: fit-content; /* Garante altura pelo conteúdo */
-    align-self: flex-start; /* Reforça alinhamento ao topo */
+    height: fit-content; 
+    align-self: flex-start; 
 }
 .coluna-propaganda h3 { margin-top: 0; font-size: 1.1em; font-weight: 700; }
 .coluna-propaganda span { font-weight: 800; font-size: 1.3em; color: #ffd700; }
 .coluna-propaganda p { margin: 8px 0; font-size: 0.95em; }
 
-/* QUADROS INTERNOS (Mensal e Total) */
 .quadro-item {
     background-color: var(--cor-fundo);
     padding: 15px;
@@ -201,13 +190,11 @@ body {
 .valor-economia { font-size: 2.2em; font-weight: 700; color: var(--cor-primaria-start); margin: 0; }
 .valor-economia-total { font-size: 2.2em; font-weight: 700; color: var(--cor-primaria-end); margin: 0; }
 
-/* MEDIA QUERIES (Responsividade) */
 @media (max-width: 768px) {
     .resultado-colunas { flex-direction: column; }
     .coluna-resultados, .coluna-propaganda { flex: none; width: 100%; margin-bottom: 20px; }
     .quadro-item { width: 100%; margin-bottom: 10px; }    
     .titulo-cotacao { font-size: 1.8em; }
     .valor-economia, .valor-economia-total { font-size: 1.8em; }
-    /* REMOVIDO: .cotacao-section { max-width: 95%; padding: 20px; } */ /* Não limitar mais a seção */
     .input-group { max-width: 100%; } 
 }

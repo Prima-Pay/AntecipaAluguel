@@ -1,16 +1,14 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // --- REGRAS DE NEGÓCIO ---
+document.addEventListener("DOMContentLoaded", () => { 
   const TAXA_MENSAL_LOCATARIO = 0.05; // 5% ao mês
   const MAX_MESES_LOCATARIO = 5; 
   const TAXA_TOTAL_LOCATARIO = TAXA_MENSAL_LOCATARIO * MAX_MESES_LOCATARIO; 
 
-  const TAXA_MENSAL_IMOBILIARIA = 0.05; // 5% ao mês (Taxa BASE da Prima)
+  const TAXA_MENSAL_IMOBILIARIA = 0.05; // 5% ao mês (juros simples)
   const MAX_MESES_IMOBILIARIA = 5; 
   const TAXA_TOTAL_IMOBILIARIA = TAXA_MENSAL_IMOBILIARIA * MAX_MESES_IMOBILIARIA;
 
   const CODIGO_PARCEIRO_IMOBILIARIA = "PRIMAPARCEIRO123"; 
 
-  // --- Seletores do DOM ---
   const tipoUsuarioSelect = document.getElementById("tipoUsuario");
   const infoTaxa = document.getElementById("infoTaxa"); 
   const camposDinamicosWrapper = document.getElementById("camposDinamicosWrapper");
@@ -32,12 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnSimular = document.getElementById("btnSimular");
   const resultadoCalculoDiv = document.getElementById("resultadoCalculo");
  
-  // --- LÓGICA PRINCIPAL ---
 
   tipoUsuarioSelect.addEventListener("change", () => {
     const tipo = tipoUsuarioSelect.value;
     
-    // Reseta tudo
     avisoLimite.style.display = "none";
     btnSimular.disabled = false;
     resultadoCalculoDiv.style.display = "none";
@@ -56,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
       valorBaseMensalInput.placeholder = "Ex: 1000.00";
       valorDesejadoInput.placeholder = "Ex: 950.00";
       
-      infoTaxa.textContent = `Taxa de juros de 5% a 25%, dependendo do valor solicitado.`;
+      infoTaxa.textContent = `Taxa base de 5% a.m. (Juros simples em relação ao CEF)`;
       infoTaxa.style.display = "block";
       
       camposDinamicosWrapper.style.display = "flex";
@@ -80,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
         valorDesejadoInput.placeholder = "Ex: 950.00";
         grupoMarkup.style.display = "block";
         
-        infoTaxa.textContent = `Taxa base de 5% a.m. (Custo total de 5% a 25% + Markup, dependendo do valor).`;
+        infoTaxa.textContent = `Taxa base de 5% a.m. + Markup (Juros simples em relação ao CEF)`;
         infoTaxa.style.display = "block";
         
         camposDinamicosWrapper.style.display = "flex"; 
@@ -94,9 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  /**
-   * 3. Validação de limite
-   */
   function validarLimiteInputs() {
     const tipo = tipoUsuarioSelect.value; 
     const base = parseFloat(valorBaseMensalInput.value) || 0;
@@ -150,9 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
   valorDesejadoInput.addEventListener("input", validarLimiteInputs);
   markupInput.addEventListener("input", validarLimiteInputs); 
 
-  /**
-   * 4. Manipulador de envio do formulário (LÓGICA DE FAIXAS)
-   */
   simuladorForm.addEventListener("submit", (event) => {
     event.preventDefault(); 
 
@@ -189,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const tetoLiquidoFaixa2 = (valorBase * 2) * (1 - taxaFaixa2); 
     const tetoLiquidoFaixa3 = (valorBase * 3) * (1 - taxaFaixa3); 
     const tetoLiquidoFaixa4 = (valorBase * 4) * (1 - taxaFaixa4); 
-    // const tetoLiquidoFaixa5 = (valorBase * 5) * (1 - taxaFaixa5); // Não é necessário
+
 
     if (valorLiquidoSolicitado <= tetoLiquidoFaixa1) {
       taxaTotalAplicada = taxaFaixa1; // 5%
@@ -215,46 +205,51 @@ document.addEventListener("DOMContentLoaded", () => {
     exibirResultado(valorLiquidoSolicitado, custoTotal, valorBrutoTotal, taxaTotalAplicada, taxaMensalBase);
   });
 
-  /**
-   * 5. Função auxiliar para formatar e exibir os resultados
-   */
-  function exibirResultado(liquido, custo, bruto, taxaTotal, taxaMensal) { 
+function exibirResultado(liquido, custo, bruto, taxaTotal, taxaMensal) { 
     const formatoMoeda = { style: "currency", currency: "BRL" };
 
     const taxaTotalFormatada = (taxaTotal * 100).toFixed(0);
     const taxaMensalFormatada = (taxaMensal * 100).toFixed(1);
-    const mesesEquivalentes = (taxaTotal / taxaMensal).toFixed(0);
+    
+    
+    const numMesesEquivalentes = taxaTotal / taxaMensal;
 
-    // --- MUDANÇA 5: Removemos o "R$" hard-coded de dentro dos <p> ---
+   
+    const custoMensal = custo / numMesesEquivalentes;
+
+    const custoMensalFormatado = custoMensal.toLocaleString("pt-BR", formatoMoeda);
+    const mesesEquivalentesFormatado = numMesesEquivalentes.toFixed(0);
+
+  
     resultadoCalculoDiv.innerHTML = `
-        <h2>Resultado da Simulação:</h2>
-        <div class="resultado-colunas">
-          <div class="coluna-resultados">
-            <div class="quadro-item mensal">
-              <h3>Valor Líquido a Receber</h3>
-              <p class="valor-economia"><span id="resultadoValorLiquido">${liquido.toLocaleString("pt-BR", formatoMoeda)}</span></p>
-            </div>
+      <h2>Resultado da Simulação:</h2>
+      <div class="resultado-colunas">
+        <div class="coluna-resultados">
+          <div class="quadro-item mensal">
+            <h3>Valor Líquido a Receber</h3>
+            <p class="valor-economia"><span id="resultadoValorLiquido">${liquido.toLocaleString("pt-BR", formatoMoeda)}</span></p>
+          </div>
+          
+          <div class="quadro-item total">
+            <h3>Custo Mensal da Operação</h3>
             
-            <div class="quadro-item total">
-              <h3>Custos da Operação (Juros/Taxas)</h3>
-              <p class="valor-economia-total"><span id="resultadoCustoTotal">${custo.toLocaleString("pt-BR", formatoMoeda)}</span></p>
-              
-              <small id="resultadoInfoTaxa" style="font-weight: 600;">
-                (Custo total: ${taxaTotalFormatada}% sobre o valor bruto.)
-              </small>
-            </div>
-
-            <div class="quadro-item">
-              <h3>Valor Total Comprometido (Bruto)</h3>
-              <p class="valor-economia" style="color: var(--cor-solida-principal);">
-                <span id="resultadoValorBruto">${bruto.toLocaleString("pt-BR", formatoMoeda)}</span>
-              </p>
-            </div>
+            <p class="valor-economia-total"><span id="resultadoCustoTotal">${custoMensalFormatado}</span></p>
+            
+            <small id="resultadoInfoTaxa" style="font-weight: 600;">
+              (Taxa: ${taxaMensalFormatada}% a.m. por ${mesesEquivalentesFormatado} meses.)
+            </small>
+          </div>
+          <div class="quadro-item">
+            <h3>Valor Total Comprometido (Bruto)</h3>
+            <p class="valor-economia" style="color: var(--cor-solida-principal);">
+              <span id="resultadoValorBruto">${bruto.toLocaleString("pt-BR", formatoMoeda)}</span>
+            </p>
           </div>
         </div>
-        <button id="btnContratar" class="btn-secundario">
-          Quero Contratar
-        </button>
+      </div>
+      <button id="btnContratar" class="btn-secundario">
+        Quero Contratar
+      </button>
     `;
     
     resultadoCalculoDiv.querySelector("#btnContratar").addEventListener("click", () => {
