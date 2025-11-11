@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -15,7 +15,10 @@
     <header class="header">
       <div class="container">
         <div class="logo">
-          <img src="assets/CompletoFundoBrancoReduzida.jpeg" alt="Prima Pay Logotipo" />
+          <img
+            src="assets/CompletoFundoBrancoReduzida.jpeg"
+            alt="Prima Pay Logotipo"
+          />
         </div>
       </div>
     </header>
@@ -26,43 +29,63 @@
           Simule aqui o seu adiantamento de aluguel!
         </h1>
         <p class="subtitulo-animado">
-           Selecione seu perfil e preencha os campos para começar.
+          Selecione seu perfil e preencha os campos para começar.
         </p>
 
         <form id="simuladorForm" class="form-calculo">
-          
           <div class="input-group">
             <label for="tipoUsuario">Você é:</label>
             <select id="tipoUsuario" required>
               <option value="">-- Selecione seu perfil --</option>
-              <option value="locatario">Locatário</option>
+              <option value="locatario">locador</option>
               <option value="imobiliaria">Imobiliária</option>
             </select>
           </div>
 
-          <div id="validacaoImobiliaria" style="display: none; width: 100%;" class="form-calculo">
+          <div
+            id="validacaoImobiliaria"
+            style="display: none; width: 100%"
+            class="form-calculo"
+          >
             <div class="input-group">
-                <label for="codigoParceiro">Insira o Código de Parceiro:</label>
-                <input
-                  type="password"
-                  id="codigoParceiro"
-                  placeholder="Seu código de acesso"
-                />
-                <small id="avisoCodigoInvalido" style="display: none; color: #c0392b; margin-top: 5px;">
-                  Código inválido. Tente novamente.
-                </small>
+              <label for="codigoParceiro">Insira o Código de Parceiro:</label>
+              <input
+                type="password"
+                id="codigoParceiro"
+                placeholder="Seu código de acesso"
+              />
+              <small
+                id="avisoCodigoInvalido"
+                style="display: none; color: #c0392b; margin-top: 5px"
+              >
+                Código inválido. Tente novamente.
+              </small>
             </div>
             <button type="button" id="btnValidarCodigo" class="btn-principal">
-                Validar
+              Validar
             </button>
           </div>
 
-          <p id="infoTaxa" style="display: none; font-size: 0.9em; color: var(--cor-solida-principal); margin-top: -10px; margin-bottom: 15px;"></p>
+          <p
+            id="infoTaxa"
+            style="
+              display: none;
+              font-size: 0.9em;
+              color: var(--cor-solida-principal);
+              margin-top: -10px;
+              margin-bottom: 15px;
+            "
+          ></p>
 
-          <div id="camposDinamicosWrapper" style="display: none; width: 100%;" class="form-calculo">
-
+          <div
+            id="camposDinamicosWrapper"
+            style="display: none; width: 100%"
+            class="form-calculo"
+          >
             <div class="input-group">
-              <label for="valorBaseMensal" id="labelValorBase">Valor Mensal (R$):</label>
+              <label for="valorBaseMensal" id="labelValorBase"
+                >Valor Mensal (R$):</label
+              >
               <input
                 type="number"
                 id="valorBaseMensal"
@@ -74,7 +97,9 @@
             </div>
 
             <div class="input-group">
-              <label for="valorDesejado" id="labelValorDesejado">Valor LÍQUIDO que deseja receber (R$):</label>
+              <label for="valorDesejado" id="labelValorDesejado"
+                >Valor LÍQUIDO que deseja receber (R$):</label
+              >
               <input
                 type="number"
                 id="valorDesejado"
@@ -83,12 +108,15 @@
                 step="0.01"
                 required
               />
-              <small id="avisoLimite" style="display: none; color: #4CAF50; margin-top: 5px;">
+              <small
+                id="avisoLimite"
+                style="display: none; color: #4caf50; margin-top: 5px"
+              >
                 Seu limite líquido é R$ 0,00
               </small>
             </div>
 
-            <div class="input-group" id="grupoMarkup" style="display: none;">
+            <div class="input-group" id="grupoMarkup" style="display: none">
               <label for="markupInput">"MARKUP" ao mês (%)</label>
               <input
                 type="number"
@@ -98,17 +126,14 @@
                 step="0.1"
               />
             </div>
-            
+
             <button type="submit" id="btnSimular" class="btn-principal">
               Simular Adiantamento
             </button>
           </div>
-
         </form>
 
-        <div id="resultadoCalculo" class="resultado" style="display: none">
-            </div>
-
+        <div id="resultadoCalculo" class="resultado" style="display: none"></div>
       </section>
     </main>
 

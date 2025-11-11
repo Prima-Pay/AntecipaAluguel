@@ -1,4 +1,3 @@
-/* Variáveis CSS */
 :root {
   --cor-primaria-start: #4a1d9c;
   --cor-primaria-end: #ed20a0;
@@ -189,6 +188,67 @@ body {
 .quadro-item h3 { font-size: 0.9em; color: var(--cor-texto-escuro); margin-top: 0; margin-bottom: 5px; font-weight: 600; text-transform: uppercase; }
 .valor-economia { font-size: 2.2em; font-weight: 700; color: var(--cor-primaria-start); margin: 0; }
 .valor-economia-total { font-size: 2.2em; font-weight: 700; color: var(--cor-primaria-end); margin: 0; }
+
+.quadro-item .cet-principal {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: var(--cor-primaria-end);
+  line-height: 1.2;
+  margin: 0 0 5px 0;
+}
+
+.quadro-item .cet-anual {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: var(--cor-primaria-end);
+  line-height: 1.2;
+  opacity: 0.8; 
+  margin: 0;
+}
+
+.quadro-item .cet-explicacao,
+.quadro-item .resumo-comprometimento {
+  font-weight: 400;
+  font-size: 0.8em;
+  color: #555;
+  display: block;
+  margin-top: 8px;
+}
+
+/* =================================================== */
+/* Estilos para o Bloco de Lucro (Imobiliária)      */
+/* =================================================== */
+
+.quadro-item-economia {
+  background: linear-gradient(
+    to top left,
+    var(--cor-primaria-start),
+    var(--cor-primaria-end)
+  );
+  color: var(--cor-texto-claro);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  height: fit-content;
+}
+
+.quadro-item-economia h3 {
+  margin-top: 0;
+  font-size: 1.1em;
+  font-weight: 700;
+}
+
+.quadro-item-economia span {
+  font-weight: 800;
+  font-size: 1.3em;
+  color: #ffd700;
+}
+
+.quadro-item-economia p {
+  margin: 8px 0;
+  font-size: 0.95em;
+}
 
 @media (max-width: 768px) {
     .resultado-colunas { flex-direction: column; }
