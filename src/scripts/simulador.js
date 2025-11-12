@@ -1,11 +1,5 @@
 /**
- * Funções de Cálculo Numérico (Método da Bissecção) para o CET
- * =============================================================
- */
-
-/**
- * Calcula o Valor Presente Líquido (VPL) para um fluxo de caixa e uma taxa.
- * @param {number} rate - A taxa de desconto por período.
+ * @param {number} rate - Taxa de desconto por período.
  * @param {number[]} cashFlow
  * @returns {number} O VPL.
  */
@@ -18,7 +12,7 @@ function calculateNPV(rate, cashFlow) {
 }
 
 /**
- * @param {number[]} cashFlow - O fluxo de caixa, ex: [+18750, -5000, -5000, ...].
+ * @param {number[]} cashFlow - Fluxo de caixa, ex: [+18750, -5000, -5000, ...].
  * @returns {number}
  */
 function calculateIRR(cashFlow) {
@@ -113,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Evento click (Validar Código)
   btnValidarCodigo.addEventListener("click", () => {
     const codigoDigitado = codigoParceiroInput.value;
 
@@ -198,14 +191,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Eventos input (Validar Limites)
   valorBaseMensalInput.addEventListener("input", validarLimiteInputs);
   valorDesejadoInput.addEventListener("input", validarLimiteInputs);
   markupInput.addEventListener("input", validarLimiteInputs);
 
-  // =============================================================
-  //     INÍCIO DAS ALTERAÇÕES NO SUBMIT
-  // =============================================================
   simuladorForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -215,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let taxaMensalBase = 0;
     let maxMeses = 0;
-    let markupPerc = 0; // << NOVO: Inicializa o markup
+    let markupPerc = 0;
 
     if (
       isNaN(valorBase) ||
@@ -274,7 +263,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // --- NOVO CÁLCULO DE LUCRO (Início) ---
     let lucroTotalImobiliaria = 0;
     if (tipo === "imobiliaria") {
       // 1. Lucro do Markup (100% do markup's share do custo total)
@@ -294,9 +282,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // 3. Lucro Total
       lucroTotalImobiliaria = lucroBase + lucroMarkup;
     }
-    // --- NOVO CÁLCULO DE LUCRO (Fim) ---
 
-    // Montagem do Fluxo de Caixa (Corrigido)
+    // Montagem do Fluxo de Caixa
     const cashFlow = [valorLiquidoSolicitado];
     let brutoRestante = valorBrutoTotal;
 
@@ -329,14 +316,11 @@ document.addEventListener("DOMContentLoaded", () => {
       ultimoPagamentoAbs,
       taxaTotalAplicada,
       taxaMensalBase,
-      lucroTotalImobiliaria, // << NOVO
-      tipo // << NOVO
+      lucroTotalImobiliaria,
+      tipo
     );
-  }); // <-- Fim do simuladorForm.addEventListener
+  });
 
-  // =============================================================
-  // FUNÇÃO EXIBIRRESULTADO (MOVIDA E ATUALIZADA)
-  // =============================================================
   function exibirResultado(
     liquido,
     custo,
@@ -347,8 +331,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ultimoPagamentoAbs,
     taxaTotal,
     taxaMensal,
-    lucroTotalImobiliaria, // << NOVO
-    tipo // << NOVO
+    lucroTotalImobiliaria,
+    tipo
   ) {
     const formatoMoeda = { style: "currency", currency: "BRL" };
     const formatoPercent = {
@@ -357,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
       maximumFractionDigits: 2,
     };
 
-    // Cálculo do Custo Mensal em R$ (Sua lógica original)
+    // Cálculo do Custo Mensal em R$
     const numMesesEquivalentes = taxaTotal > 0 ? taxaTotal / taxaMensal : 0;
     const custoMensal =
       numMesesEquivalentes > 0 ? custo / numMesesEquivalentes : 0;
@@ -373,7 +357,6 @@ document.addEventListener("DOMContentLoaded", () => {
       formatoMoeda
     );
 
-    // Lógica do Texto de Comprometimento (Mantida)
     let textoComprometimento = "";
     const isUltimaParcelaCheia = Math.abs(ultimoPagamentoAbs - valorBase) < 0.01;
 
@@ -386,15 +369,14 @@ document.addEventListener("DOMContentLoaded", () => {
       textoComprometimento = `(Compromete ${numParcelasCheias} recebimentos de ${valorBaseFormatado} e 1 recebimento parcial de ${ultimoPagamentoFormatado})`;
     }
 
-    // --- LÓGICA DO QUADRO DE LUCRO (Início) ---
-    let lucroHtml = ""; // Inicia como string vazia
+
+    let lucroHtml = "";
     if (tipo === "imobiliaria" && lucroTotalImobiliaria > 0) {
       const lucroFormatado = lucroTotalImobiliaria.toLocaleString(
         "pt-BR",
         formatoMoeda
       );
 
-      // Usa a classe .quadro-item-economia que você forneceu
       lucroHtml = `
           <div class="quadro-item-economia">
             <h3>Seu Lucro na Operação:</h3>
@@ -403,9 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
     }
-    // --- LÓGICA DO QUADRO DE LUCRO (Fim) ---
-
-    // HTML da Exibição
+  
     resultadoCalculoDiv.innerHTML = `
       <h2>Resultado da Simulação:</h2>
       <div class="resultado-colunas">
@@ -460,7 +440,5 @@ document.addEventListener("DOMContentLoaded", () => {
     resultadoCalculoDiv.style.display = "block";
     resultadoCalculoDiv.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-  // =============================================================
-  // FIM DA FUNÇÃO EXIBIRRESULTADO
-  // =============================================================
-}); // <-- Fim do DOMContentLoaded
+ 
+});
